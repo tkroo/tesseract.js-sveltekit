@@ -133,7 +133,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: hsla(0, 0%, 100%, 0.75);
+    background-color: hsla(0, 0%, 100%, 0.85);
     display: flex;
     flex-grow: 1;
     justify-content: center;
