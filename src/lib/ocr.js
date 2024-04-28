@@ -1,4 +1,4 @@
-import { createWorker } from "tesseract.js";
+import { createWorker, PSM } from "tesseract.js";
 import PdfToImg from "pdftoimg-js";
 
 
@@ -42,7 +42,7 @@ export const readImg = async (file) => {
       }
     };
   });
-  
+
 }
 
 export const convertPdfToImg = async (file) => {
@@ -57,7 +57,13 @@ export const convertPdfToImg = async (file) => {
  */
 export const ocrFile = async (file) => {
   const worker = await createWorker("eng");
+  (async () => {
+    await worker.setParameters({
+      tessedit_pageseg_mode: PSM.AUTO,
+    })
+  })
   const ret = await worker.recognize(file);
   await worker.terminate();
-  return ret.data.text;
+  console.log("ret", ret);
+  return ret.data;
 };

@@ -1,10 +1,18 @@
 <script>
   import { toggleModal } from "$lib/toggleModal";
   export let file;
+  export let confidenceHighlighting = false;
 </script>
 
 <div class="horiz">
-  <textarea rows="8" aria-label="text from image">{file.text}</textarea>
+  <div class="woo">
+    <textarea rows="8" aria-label="text from image">{file.text}</textarea>
+    {#if confidenceHighlighting}
+      <div class:confidence={confidenceHighlighting} class="hocr">
+        {@html file.hocr}
+      </div>
+    {/if}
+  </div>
   <div class="foo">
     <button
       class="button-image"
@@ -51,5 +59,9 @@
     max-width: var(--mysize);
     max-height: var(--mysize);
     height: auto;
+  }
+
+  .hocr {
+    background-color: #ffffff;
   }
 </style>

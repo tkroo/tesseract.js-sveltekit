@@ -1,0 +1,25 @@
+@for $i from 41 through 100 {
+  .hocr.confidence .ocrx_word[title$="x_wconf #{$i}"] {
+    background-color: hsla(100, 100%, calc($i * 1%), 0.25);
+  }
+}
+
+@for $i from 0 through 40 {
+  .hocr.confidence .ocrx_word[title$="x_wconf #{$i}"] {
+    color: #fff;
+    background-color: hsla(0, 100%, calc($i * 1%), 0.5);
+  }
+}
+
+.hocr {
+  background-color: #fff;
+  padding: 1rem;
+}
+
+.ocr_line {
+  display: block;
+  // display: flex;
+  // justify-content: space-between;
+  // gap: 0.4rem;
+
+}

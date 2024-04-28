@@ -10,6 +10,7 @@
    * @type {boolean}
    */
   let processing = false;
+  let confidenceHighlighting = false;
 
   /**
    * @type {HTMLInputElement}
@@ -27,9 +28,9 @@
    */
   async function processFile(file) {
     const uriString = await readImg(file);
-    const text = await ocrFile(file);
+    const ocrresults = await ocrFile(file);
     const name = file.name;
-    return { uriString, text, name };
+    return { uriString, text: ocrresults.text, hocr: ocrresults.hocr, name };
   }
 
   /**
@@ -95,11 +96,18 @@
           results = [];
         }}>Clear results</button
       >
+
+      <button
+        class="btn btn-clear"
+        on:click={() => {
+          confidenceHighlighting = !confidenceHighlighting;
+        }}>Toggle confidence highlighting</button
+      >
     {/if}
   </div>
 
   {#each results as r}
-    <ResultBlock file={r} />
+    <ResultBlock file={r} {confidenceHighlighting} />
   {/each}
 </div>
 
