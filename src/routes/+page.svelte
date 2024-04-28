@@ -78,7 +78,9 @@
     <span>Extract text from images and pdfs</span>
   </div>
   <div class="interact">
-    <label for="fileinput">Drag and drop or click to select files</label>
+    <label for="fileinput"
+      ><small>Drag and drop or click to select files</small></label
+    >
     <input
       id="fileinput"
       class="btn fileinput"

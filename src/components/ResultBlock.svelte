@@ -9,12 +9,20 @@
   <div class="woo">
     <!-- <textarea rows="8" aria-label="text from image">{file.text}</textarea> -->
     <slot name="confidence" />
-    <button
+    <label for="confidence"
+      ><small>confidence highlighting</small>
+      <input
+        type="checkbox"
+        id="confidence"
+        bind:checked={confidenceHighlighting}
+      />
+    </label>
+    <!-- <button
       class="btn btn-clear"
       on:click={() => {
         confidenceHighlighting = !confidenceHighlighting;
       }}>confidence highlighting</button
-    >
+    > -->
     <div class:confidence={confidenceHighlighting} class="hocr" tabindex="0">
       {@html file.hocr}
     </div>
