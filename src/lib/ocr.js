@@ -57,11 +57,11 @@ export const convertPdfToImg = async (file) => {
  */
 export const ocrFile = async (file) => {
   const worker = await createWorker("eng");
-  (async () => {
-    await worker.setParameters({
-      tessedit_pageseg_mode: PSM.AUTO,
-    })
+  await worker.setParameters({
+    tessedit_pageseg_mode: PSM.AUTO_OSD,
   })
+  // (async () => {
+  // })();
   const ret = await worker.recognize(file);
   await worker.terminate();
   console.log("ret", ret);

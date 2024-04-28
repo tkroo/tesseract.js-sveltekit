@@ -10,7 +10,6 @@
    * @type {boolean}
    */
   let processing = false;
-  let confidenceHighlighting = false;
 
   /**
    * @type {HTMLInputElement}
@@ -24,13 +23,20 @@
 
   /**
    * @param {File} file
-   * @returns {Promise<{uriString: string, text: string, name: string}>}
+   * @returns {Promise<{uriString: string, text: string, hocr: string, confidence: number, name: string, psm: number}>}
    */
   async function processFile(file) {
     const uriString = await readImg(file);
     const ocrresults = await ocrFile(file);
     const name = file.name;
-    return { uriString, text: ocrresults.text, hocr: ocrresults.hocr, name };
+    return {
+      uriString,
+      text: ocrresults.text,
+      hocr: ocrresults.hocr,
+      confidence: ocrresults.confidence,
+      name,
+      psm: ocrresults.psm,
+    };
   }
 
   /**
@@ -96,18 +102,18 @@
           results = [];
         }}>Clear results</button
       >
-
-      <button
-        class="btn btn-clear"
-        on:click={() => {
-          confidenceHighlighting = !confidenceHighlighting;
-        }}>Toggle confidence highlighting</button
-      >
     {/if}
   </div>
 
   {#each results as r}
-    <ResultBlock file={r} {confidenceHighlighting} />
+    <ResultBlock file={r}>
+      <p class="nmt" slot="confidence">
+        <small
+          >document confidence: {r.confidence}<br />
+          psm: {r.psm}
+        </small>
+      </p>
+    </ResultBlock>
   {/each}
 </div>
 
@@ -129,7 +135,6 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    /* gap: 1rem; */
     align-items: baseline;
     margin-bottom: 1rem;
   }
@@ -162,7 +167,7 @@
   }
   .btn {
     background-color: var(--color-accent);
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     font-size: 0.8rem;
     cursor: pointer;
@@ -176,5 +181,8 @@
   .btn:disabled:hover {
     background-color: hsla(204, 93%, 20%, 0.5);
     cursor: auto;
+  }
+  .nmt {
+    margin-top: 0;
   }
 </style>

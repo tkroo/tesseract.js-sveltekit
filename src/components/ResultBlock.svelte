@@ -1,17 +1,24 @@
 <script>
   import { toggleModal } from "$lib/toggleModal";
   export let file;
-  export let confidenceHighlighting = false;
+
+  let confidenceHighlighting = false;
 </script>
 
 <div class="horiz">
   <div class="woo">
-    <textarea rows="8" aria-label="text from image">{file.text}</textarea>
-    {#if confidenceHighlighting}
-      <div class:confidence={confidenceHighlighting} class="hocr">
-        {@html file.hocr}
-      </div>
-    {/if}
+    <!-- <textarea rows="8" aria-label="text from image">{file.text}</textarea> -->
+    <slot name="confidence" />
+    <button
+      class="btn btn-clear"
+      on:click={() => {
+        confidenceHighlighting = !confidenceHighlighting;
+      }}>confidence highlighting</button
+    >
+    <div class:confidence={confidenceHighlighting} class="hocr" tabindex="0">
+      {@html file.hocr}
+    </div>
+    {#if confidenceHighlighting}{/if}
   </div>
   <div class="foo">
     <button
@@ -63,5 +70,21 @@
 
   .hocr {
     background-color: #ffffff;
+    resize: both;
+    overflow: auto;
+    height: var(--mysize);
+    -webkit-user-select: all;
+    user-select: all;
+  }
+
+  .hocr:focus {
+    animation: select 100ms step-end forwards;
+  }
+
+  @keyframes select {
+    to {
+      -webkit-user-select: text;
+      user-select: text;
+    }
   }
 </style>

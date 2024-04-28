@@ -9,7 +9,7 @@
   --color-bg: #282a36;
   --color-bg2: rgb(12, 19, 58) 6;
   --color-accent: #044672;
-  --mysize: 200px;
+  --mysize: 400px;
 }
 
 body {
@@ -17,7 +17,8 @@ body {
   padding: 0;
   height: 100%;
   width: 100%;
-  font-family:
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  /* font-family:
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
@@ -28,5 +29,5 @@ body {
     Cantarell,
     "Open Sans",
     "Helvetica Neue",
-    sans-serif;
+    sans-serif; */
 }
