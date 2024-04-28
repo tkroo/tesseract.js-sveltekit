@@ -1,4 +1,3 @@
-// import { modalimg, showmodal } from "$lib/stores";
 import { writable } from "svelte/store";
 
 export const showmodal = writable(false);
