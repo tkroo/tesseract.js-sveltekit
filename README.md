@@ -9,4 +9,8 @@ An example project built with [SvelteKit](https://kit.svelte.dev), [tesseract.js
 pnpm install  
 
 # start server and open the app in a new browser tab  
-pnpm run dev --open
+pnpm run dev --open  
+```  
+
+![screen shot](ScreenShot.png)
+
