@@ -5,6 +5,7 @@
   import ResultBlock from "$components/ResultBlock.svelte";
   import Modal from "$components/Modal.svelte";
   import { ocrFile, readImg } from "$lib/ocr";
+  import { languages } from "tesseract.js";
 
   /**
    * @type {boolean}
@@ -21,13 +22,15 @@
    */
   let results = [];
 
+  let lang = "eng";
+
   /**
    * @param {File} file
    * @returns {Promise<{uriString: string, text: string, hocr: string, confidence: number, name: string, psm: number}>}
    */
   async function processFile(file) {
     const uriString = await readImg(file);
-    const ocrresults = await ocrFile(file);
+    const ocrresults = await ocrFile(file, lang);
     const name = file.name;
     return {
       uriString,
@@ -91,6 +94,12 @@
       multiple
       accept="image/jpg, image/jpeg, image/png, image/webp, image/pbm, image/bmp, application/pdf"
     />
+
+    <select bind:value={lang} name="lang" id="lang">
+      {#each Object.keys(languages) as l}
+        <option value={languages[l]}>{l}</option>
+      {/each}
+    </select>
 
     {#if processing}
       <Spinner />

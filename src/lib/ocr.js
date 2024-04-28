@@ -1,4 +1,4 @@
-import { createWorker, PSM } from "tesseract.js";
+import { createWorker, PSM, OEM } from "tesseract.js";
 import PdfToImg from "pdftoimg-js";
 
 
@@ -55,8 +55,8 @@ export const convertPdfToImg = async (file) => {
  * @param {(string|File)} file - The image file to be read.
  * @return {Promise<string>} A promise that resolves with the data URL of the image.
  */
-export const ocrFile = async (file) => {
-  const worker = await createWorker("eng");
+export const ocrFile = async (file, lang = "eng") => {
+  const worker = await createWorker(lang, 1);
   await worker.setParameters({
     tessedit_pageseg_mode: PSM.AUTO_OSD,
   })
