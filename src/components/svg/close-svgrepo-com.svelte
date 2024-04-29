@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" fill="none"><path stroke="#d1d1d1" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 6 12 12m0-12L6 18"/><title>remove</title></svg>

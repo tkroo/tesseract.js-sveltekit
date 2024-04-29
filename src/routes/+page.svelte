@@ -5,47 +5,29 @@
   import ResultBlock from "$components/ResultBlock.svelte";
   import Modal from "$components/Modal.svelte";
   import { ocrFile, readImg } from "$lib/ocr";
-  import { languages } from "tesseract.js";
 
-  /**
-   * @type {boolean}
-   */
   let processing = false;
-
-  /**
-   * @type {HTMLInputElement}
-   */
   let inputElement;
-
-  /**
-   * @type {Array<{uriString: string, text: string, name: string}>}
-   */
   let results = [];
-
   let lang = "eng";
 
-  /**
-   * @param {File} file
-   * @returns {Promise<{uriString: string, text: string, hocr: string, confidence: number, name: string, psm: number}>}
-   */
   async function processFile(file) {
-    const uriString = await readImg(file);
-    const ocrresults = await ocrFile(file, lang);
-    const name = file.name;
+    const results = await Promise.allSettled([await readImg(file), await ocrFile(file, lang)]);
+
+    const id = results[1].value.jobId;
+    const { text, hocr, confidence, psm } = results[1].value.data;
+
     return {
-      uriString,
-      text: ocrresults.text,
-      hocr: ocrresults.hocr,
-      confidence: ocrresults.confidence,
-      name,
-      psm: ocrresults.psm,
+      uriString: results[0].value,
+      text,
+      hocr,
+      confidence,
+      psm,
+      name: file.name,
+      id
     };
   }
 
-  /**
-   * @param {Event} e
-   * @returns {Promise<void>}
-   */
   const handleFiles = async (e) => {
     processing = true;
     if (e.target instanceof HTMLInputElement && e.target.files) {
@@ -71,7 +53,13 @@
       inputElement.files = null;
     }
   };
+
+  function handleMessage(event) {
+    console.log("event.detail.id", event.detail.id);
+    results = results.filter((result) => result.id != event.detail.id);
+  }
 </script>
+
 
 <Modal />
 
@@ -80,52 +68,47 @@
     <h1 class="title">Tesseract.js</h1>
     <span>Extract text from images and pdfs</span>
   </div>
-  <div class="interact">
+  <div class="form">
     <label for="fileinput"
-      ><small>Drag and drop or click to select files</small></label
-    >
-    <input
-      id="fileinput"
-      class="btn fileinput"
-      bind:this={inputElement}
-      on:change={(e) => handleFiles(e)}
-      disabled={processing}
-      type="file"
-      multiple
-      accept="image/jpg, image/jpeg, image/png, image/webp, image/pbm, image/bmp, application/pdf"
-    />
-
-    <select bind:value={lang} name="lang" id="lang">
-      {#each Object.keys(languages) as l}
-        <option value={languages[l]}>{l}</option>
-      {/each}
-    </select>
-
-    {#if processing}
-      <Spinner />
-      <span>Recognizing text ...</span>
-    {/if}
-
-    {#if results.length && !processing}
-      <button
-        class="btn btn-clear"
-        on:click={() => {
-          results = [];
-        }}>Clear results</button
+        ><small>Drag and drop or click to select files</small></label
       >
-    {/if}
-  </div>
-
-  {#each results as r}
-    <ResultBlock file={r}>
-      <p class="nmt" slot="confidence">
-        <small
-          >document confidence: {r.confidence}<br />
-          psm: {r.psm}
-        </small>
-      </p>
-    </ResultBlock>
-  {/each}
+      <input
+        id="fileinput"
+        class="btn fileinput"
+        bind:this={inputElement}
+        on:change={(e) => handleFiles(e)}
+        disabled={processing}
+        type="file"
+        multiple
+        accept="image/jpg, image/jpeg, image/png, image/webp, image/pbm, image/bmp, application/pdf"
+      />
+  
+      <!-- <select bind:value={lang} name="lang" id="lang">
+        {#each Object.keys(languages) as l}
+          <option value={languages[l]}>{l}</option>
+        {/each}
+      </select> -->
+  
+      {#if processing}
+        <Spinner />
+        <span>Recognizing text ...</span>
+      {/if}
+  
+      {#if results.length && !processing}
+        <button
+          class="btn btn-clear"
+          on:click={() => {
+            results = [];
+          }}>Clear results</button
+        >
+      {/if}
+    </div>
+  
+    <div class="results_main">
+      {#each results as r}
+      <ResultBlock file={r} id={r.id} on:message={handleMessage} />
+    {/each}
+    </div>
 </div>
 
 <style>
@@ -135,7 +118,7 @@
     width: 100%;
     padding: 2rem;
   }
-  .interact {
+  .form {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -164,7 +147,7 @@
   .fileinput::file-selector-button {
     font-weight: bold;
     font-family: inherit;
-    border: 1px solid var(--color-accent);
+    border-width: 0px;
     border-radius: 0.25rem;
     background-color: transparent;
     color: var(--color-fg);
@@ -173,18 +156,21 @@
     position: relative;
   }
 
-  .fileinput:hover {
-    background-color: hsl(204, 93%, 20%);
-  }
   .btn {
     background-color: var(--color-accent);
+    border-width: 0;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     font-size: 0.8rem;
     cursor: pointer;
+    height: 2rem;
+    font-weight: bold;
+  }
+  .btn:hover,
+  .fileinput:hover {
+    background-color: var(--color-accent-hover);
   }
   .btn-clear {
-    border: 1px solid var(--color-accent);
     color: var(--color-fg);
   }
 
@@ -193,7 +179,7 @@
     background-color: hsla(204, 93%, 20%, 0.5);
     cursor: auto;
   }
-  .nmt {
-    margin-top: 0;
+  small {
+    font-size: 0.7rem;
   }
 </style>

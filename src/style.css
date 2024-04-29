@@ -8,8 +8,15 @@
   --color-fg: #f8f8f2;
   --color-bg: #282a36;
   --color-bg2: rgb(12, 19, 58) 6;
-  --color-accent: #044672;
-  --mysize: 400px;
+  /* --color-accent: #044672; */
+  /* --color-accent: hsl(208, 74%, 47%); */
+  --color-accent: hsl(208, 75%, 35%);
+  --color-accent-hover: hsl(208, 75%, 50%);
+  --mysize: 300px;
+}
+
+html {
+  width: 100%;
 }
 
 body {

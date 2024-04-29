@@ -12,8 +12,20 @@
 }
 
 .hocr {
-  background-color: #fff;
   padding: 1rem;
+  background-color: #ffffff;
+  resize: both;
+  overflow: auto;
+  -webkit-user-select: all;
+  user-select: all;
+  z-index: 2;
+  flex-grow: 1;
+  height: var(--mysize);
+  font-size: 1.1rem;
+}
+
+.hocr:focus {
+  animation: select 100ms step-end forwards;
 }
 
 .ocr_line {
