@@ -91,8 +91,7 @@
     border: 0;
     background-color: transparent;
     cursor: pointer;
-    width: fit-content;
-    max-width: var(--mysize);
+    max-height: var(--mysize);
   }
 
   .horiz .woo {
@@ -120,10 +119,8 @@
 
   .horiz .img {
     display: block;
-    /* width: var(--mysize); */
     max-width: 100%;
-    /* max-height: var(--mysize); */
-    height: auto;
+    max-height: var(--mysize);
   }
 
   .btn {
